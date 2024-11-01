@@ -37,5 +37,6 @@ struct Deck {
 
 fn main() {
     const a: char = '😊';
+
     println!("{:#?}", a)
 }

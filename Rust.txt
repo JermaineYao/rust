@@ -1,1 +1,27 @@
-語法結構
+
+--- 語法結構 --- 
+
+• keywords, 關鍵字
+
+• identifier, 標識符 
+
+• comment, 註釋
+
+• whitespace, 空白
+
+• tokens, 詞條
+
+• path, 路徑
+
+
+
+
+--- keywords, 關鍵字 --- 
+
+• Strict, 嚴格關鍵字
+                    
+• Reserved, 保留字
+
+• Weak, 弱關鍵字
+
+  https://doc.rust-lang.org/reference/keywords.html
