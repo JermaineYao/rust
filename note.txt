@@ -1,0 +1,119 @@
+println!  
+! 為 marco
+
+"xxx" 為 string
+'xxx' 為 char
+
+
+在 Rust 中，char、String 和 &str 都是表示字符和字符串的類型，但它們各自有不同的用途和特性。以下是對這三者的詳細介紹與示例：
+
+1. char
+單一字符類型：char 用於表示單個 Unicode 字符，佔用 4 字節，可以存儲任何有效的 UTF-8 字符（如英文、中文、表情符號等）。
+定義方式：使用單引號包裹字符，例如 'A'、'你' 或 '😊'。
+用途：適合存儲和操作單個字符，例如在循環中遍歷字符串中的每個字符。
+
+fn main() {
+    let c: char = 'A';
+    println!("字符是: {}", c);
+}
+
+
+2. String
+可變長度的字符串：String 是一個可變且可擴展的字符串類型，存儲在堆內存中。它是 Rust 中常用的字符串類型，適合在運行時動態構建和修改字符串。
+創建方式：可以使用 String::new() 或 String::from("內容") 來創建，也可以使用 to_string() 方法從 &str 生成 String。
+用途：適合處理需要動態增刪或長度變化的字符串。
+常用操作：
+
+追加：可以用 push 添加單個字符，或用 push_str 添加字符串切片。
+連接：可以使用 + 符號或 format! 宏來連接字符串。
+
+fn main() {
+    let mut greeting = String::from("Hello");
+    greeting.push(' '); // 添加單個字符
+    greeting.push_str("World!"); // 添加字符串切片
+    println!("{}", greeting); // 輸出: Hello World!
+
+    let name = String::from("Alice");
+    let message = format!("Hello, {}!", name); // 使用 format! 拼接
+    println!("{}", message); // 輸出: Hello, Alice!
+}
+
+
+3. &str（字符串切片）
+不可變的字符串切片：&str 是不可變的字符串引用，通常稱為“字符串切片”。它指向的是字符串數據的某部分，數據可能位於堆上（String）或靜態內存（如字面量）。
+定義方式：可以直接使用字面量 "Hello, world!"，這種字面量就是 &str 類型，或從 String 的 .as_str() 方法獲得。
+用途：適合用作函數參數，因為不會造成數據複製和內存佔用。&str 的大小是固定的，僅包含指向數據的指針和長度。
+
+fn main() {
+    let literal_str: &str = "Hello, world!"; // 靜態分配的字符串切片
+    let string_obj = String::from("Hello, Rust!");
+    let slice_str: &str = &string_obj; // 從 String 取得 &str 切片
+
+    println!("{}", literal_str); // 輸出: Hello, world!
+    println!("{}", slice_str);    // 輸出: Hello, Rust!
+}
+
+
+String 和 &str 的互相轉換
+String 到 &str：可以使用 &string 或 string.as_str()。
+&str 到 String：可以使用 to_string() 或 String::from()。
+
+fn main() {
+    let s: String = String::from("Hello");
+    let s_slice: &str = &s; // `String` 轉 `&str`
+    println!("{}", s_slice);
+
+    let s_new: String = s_slice.to_string(); // `&str` 轉 `String`
+    println!("{}", s_new);
+}
+
+
+總結
+char：表示單個 Unicode 字符。
+String：可變長度字符串，適合動態增刪的場景。
+&str：不可變字符串切片，適合用作函數參數或靜態字符串字面量。
+
+
+
+
+
+
+&s 的 & 是 引用運算符，用來創建一個對變數 s 的引用，而不是這個變數名稱包含 &。因此，&s 的意思是「取得 s 的引用」，並非變數名就叫 &s。
+
+具體說明
+& 的用途：在 Rust 中，& 用於創建一個引用。這表示我們並不是將 s 的值複製一份，而是建立一個指向它的引用。
+引用的作用：引用允許我們使用原始變數（這裡是 s）的值，而不需要複製它的數據。在這段程式碼中，&s 創建了一個指向 s 的不可變引用，這樣我們可以輕量地查看 s 的內容，並使用 &str 來處理它。
+示例
+以下是這段程式碼中引用的作用和意義：
+
+
+let s: String = String::from("Hello"); // s 是 String 類型
+let s_slice: &str = &s; // 這裡的 &s 是 String -> &str 的引用
+
+在 let s_slice: &str = &s; 這行中：
+&s 創建了 s 的引用，也就是我們取得了 s 的地址，但不複製 s 裡面的值。
+s_slice 是一個 &str 類型，因此 &s 符合 &str 的類型需求，因為 String 可以自動地被轉換為 &str。
+這樣做的好處是，通過引用，我們可以訪問 s 的內容，並避免直接擁有 String 的所有權（防止改動原來的 String 或引發內存拋出）。
+
+s_slice 是 s 的 不可變引用 (&str)，所以你可以通過 s_slice 讀取 s 的值，但不能通過 s_slice 改變 s 的值。不可變引用在 Rust 中只允許讀取，而不允許修改。
+
+let s: String = String::from("Hello");
+let s_slice: &str = &s; // `s` 的不可變引用
+
+println!("{}", s_slice); // 可以通過 `s_slice` 讀取 `s` 的值
+
+這樣可以讀取 s 的值，但是如果你嘗試通過 s_slice 修改它的內容，比如：
+s_slice.push_str(" World"); // 錯誤：不能通過不可變引用修改 `s`
+這樣會報錯，因為 s_slice 是不可變的，無法改變 s 的值。
+
+若要修改 s，你需要使用可變引用 (&mut String)。例如：
+let mut s = String::from("Hello"); // 可變的 String
+let s_slice: &mut String = &mut s; // 可變引用
+s_slice.push_str(" World"); // 可以通過 `s_slice` 修改 `s`
+println!("{}", s); // 輸出: Hello World
+在此範例中，由於 s_slice 是 s 的可變引用，因此我們可以通過它來修改 s 的內容。
+
+
+小結
+&str 是不可變引用，只能讀取而不能修改。
+若要通過引用修改原來的數據，需使用 &mut String 等可變引用。
